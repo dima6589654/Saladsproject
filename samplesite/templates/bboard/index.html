@@ -4,9 +4,9 @@
 {% load filtersandtags %}
 
 {% block content %}
-
+<p>Количество посещений: {{ cnt }}</p>
+<p>{{ block.super }}</p>
 {#% bootstrap_pagination page size="small" url="/page" %#}
-
 {% for bb in bbs %}
 <div>
     <h2>
@@ -15,12 +15,17 @@
         </a>
     </h2>
     <p>{{ bb.content.rendered }}</p>
+
     <p><strong>Цена:</strong> {{ bb.price|cur }}</p>
+    <p><strong>Цена:</strong> {{ bb.price|cur:'тг.' }}</p>
+
     <p><a href="{{ bb.rubric.get_absolute_url }}">
         {{ bb.rubric.name }}</a></p>
     <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
 </div>
 {% endfor %}
+
+
 <nav>
     <ul class="pagination">
         {% if page.has_previous %}
@@ -44,6 +49,5 @@
         {% endif %}
     </ul>
 </nav>
-
 
 {% endblock content %}

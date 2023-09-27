@@ -17,18 +17,17 @@
         {% endif %}
     </a>
     {% endfor %}
-
-{% if user.is_authenticated %}
-<h4>
+    {% if user.is_authenticated %}
+<h3>
     <a href="{% url 'logout' %}">
         Выйти ({{ user.username }})
     </a>
-</h4>
+</h3>
 {% else %}
-<h4>
+<h3>
     <a href="{% url 'login' %}">
         Войти
     </a>
-</h4>
+</h3>
 {% endif %}
 </nav>

@@ -2,29 +2,28 @@ from bboard.models import Rubric
 
 
 def my_middleware(next):
-    # Здесь можно выполнить какую-либо инициализацию
+    # Инициализация (объявление переменных и т. п.)
     def core_middleware(request):
-        # Здесь выполняется обработка клиентского запроса
+        # Обработка клиентского запроса
         response = next(request)
-        # Здесь выполняется обработка ответа
+        # Обработка ответа
         return response
-
     return core_middleware
 
 
 class MyMiddleware:
-    def __int__(self, next):
+    def __init__(self, next):
         self._next = next
-        # Здесь можно выполнить какую-либо инициализацию
+        # Какая-либо инициализация
 
     def __call__(self, request):
-        # Здесь выполняется обработка клиентского запроса
+        # Обработка клиентского запроса
         response = self._next(request)
-        # обработка ответа
+        # Обработка ответа
         return response
 
 
-class RubricMiddleware:
+class RubricsMiddleware:
     def __init__(self, get_response):
         self._get_response = get_response
 
@@ -34,3 +33,4 @@ class RubricMiddleware:
     def process_template_response(self, request, response):
         response.context_data['rubrics'] = Rubric.objects.all()
         return response
+
