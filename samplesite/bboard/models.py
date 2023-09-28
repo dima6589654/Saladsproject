@@ -159,8 +159,11 @@ class Bb(models.Model):
             return f'{self.title} ({self.price:.2f})'
         return self.title
 
+
     class Meta:
         # order_with_respect_to = 'rubric'
         verbose_name = "Объявление"
         verbose_name_plural = "Объявления"
         ordering = ['-published', 'title']
+
+
