@@ -1,18 +1,18 @@
 import os.path
 from datetime import datetime
 
+from django.core.mail import send_mail
 from django.db import transaction
 from django.http import FileResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView,\
+from django.views.generic import CreateView, DetailView, ListView, \
     DeleteView, UpdateView
 from django.contrib import messages
 
 from firstsite.settings import BASE_DIR
 from testapp.forms import SMSCreateForm, ImgForm
 from testapp.models import SMS, Img
-
 
 FILES_ROOT = os.path.join(BASE_DIR, 'files')
 
@@ -98,3 +98,18 @@ def test_cookie(request):
     request.session.set_test_cookie()
 
     return render(request, 'testapp/test_cookie.html')
+
+
+def test_mail(reqeust):
+    title = 'test'
+    message = "test2"
+    em_from = "kandima335554@gmail.com"
+    em_to = ["kandima334@gmail.com"]
+    em_to2 = ["kandima334@gmail.com","kandima334@gmail.com"]
+    html_mes = '<h1>!!test!!!</h1>'
+
+    mslg1= (title, message, em_from, em_to)
+    mslg2= (title, message, em_from, em_to2)
+    send_mass_mail=(mslg1,mslg2)
+    # return send_mail(title, message, em_from, em_to, html_message=html_mes,fail_silently=True)
+    return redirect('testapp:index')
