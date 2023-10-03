@@ -1,15 +1,11 @@
-import os.path
+import os
 from datetime import datetime
-
 from django.core.mail import send_mail
-from django.db import transaction
 from django.http import FileResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView, \
-    DeleteView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, DeleteView, UpdateView
 from django.contrib import messages
-
 from firstsite.settings import BASE_DIR
 from testapp.forms import SMSCreateForm, ImgForm
 from testapp.models import SMS, Img
@@ -29,12 +25,7 @@ class ReadSms(DetailView):
 
 
 def index(request):
-    imgs = []
-
-    for entry in os.scandir(FILES_ROOT):
-        imgs.append(os.path.basename(entry))
-        print('FILE: ', os.path.basename(entry))
-    print(imgs)
+    imgs = [os.path.basename(entry) for entry in os.scandir(FILES_ROOT)]
     context = {'imgs': imgs}
     return render(request, 'testapp/index.html', context)
 
@@ -49,8 +40,7 @@ def add(request):
         form = ImgForm(request.POST, request.FILES)
         if form.is_valid():
             uploaded_file = request.FILES['img']
-            fn = '%s%s' % (datetime.now().timestamp(),
-                           os.path.splitext(uploaded_file.name)[1])
+            fn = '%s%s' % (datetime.now().timestamp(), os.path.splitext(uploaded_file.name)[1])
             fn = os.path.join(FILES_ROOT, fn)
 
             with open(fn, 'wb+') as destination:
@@ -62,7 +52,6 @@ def add(request):
         form = ImgForm()
 
     context = {'form': form}
-
     return render(request, 'testapp/add.html', context)
 
 
@@ -72,19 +61,12 @@ def edit(request, pk):
         form = ImgForm(request.POST, request.FILES, instance=img)
         if form.is_valid():
             form.save()
-            messages.add_message(request, messages.SUCCESS, 'Картинка изменена',
-                                 extra_tags='first second')
-            # messages.success(request, 'Картинка изменена', extra_tags='first second')
-            # return redirect('index')
-
-            msgs = messages.get_messages(request)
-            print(msgs[0].message)
+            messages.add_message(request, messages.SUCCESS, 'Картинка изменена', extra_tags='first second')
 
     else:
         form = ImgForm(instance=img)
 
     context = {'form': form, 'img': img}
-
     return render(request, 'testapp/edit.html', context)
 
 
@@ -94,22 +76,16 @@ def test_cookie(request):
         print("COOKIES удалены!!!")
     else:
         print("Просим клиента включить COOKIES")
-
     request.session.set_test_cookie()
-
     return render(request, 'testapp/test_cookie.html')
 
 
-def test_mail(reqeust):
-    title = 'test'
-    message = "test2"
-    em_from = "kandima335554@gmail.com"
-    em_to = ["kandima334@gmail.com"]
-    em_to2 = ["kandima334@gmail.com","kandima334@gmail.com"]
-    html_mes = '<h1>!!test!!!</h1>'
-
-    mslg1= (title, message, em_from, em_to)
-    mslg2= (title, message, em_from, em_to2)
-    send_mass_mail=(mslg1,mslg2)
-    # return send_mail(title, message, em_from, em_to, html_message=html_mes,fail_silently=True)
+def test_mail(request):
+    title = 'Test2'
+    message = 'Test2!!!'
+    em_from = 'webmaster@supersite.ru'
+    em_to = ['user@othersite.ru']
+    em_to_2 = ['user@othersite.ru', 'user2@othersite.ru']
+    html_mes = '<h1>!!! 2Text2 !!!</h1>'
+    send_mail(title, message, em_from, em_to, html_message=html_mes)
     return redirect('testapp:index')

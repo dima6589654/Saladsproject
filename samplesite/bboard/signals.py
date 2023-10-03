@@ -1,26 +1,21 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver, Signal
-
 from bboard.models import Bb
 
 
 @receiver(post_save, sender=Bb)
-def post_save_dispatcher(created, **kwargs):
-    instance = kwargs['instance']
+def post_save_dispatcher(sender, instance, created, **kwargs):
     if created:
-        print(f'объявление {instance.title} создано!!!!!')
+        print(f'Объявление "{instance.title}" создано!')
     else:
-        print(f'изменено {instance.title}')
+        print(f'Объявление "{instance.title}" обновлено!')
 
 
 add_bb = Signal()
 
 
-def add_bb_dispatcher(sender, **kwargs):
-    rubric = sender.rubric
-    price = sender.price
-    print(f'объявления в рубрике "{rubric}" с ценой {price:.2f} создано')
-
-
-# add_bb.send(Bb, instance=Bb, rubric=Bb.rubric)
-add_bb.connect(add_bb_dispatcher)
+@receiver(add_bb)
+def add_bb_dispatcher(sender, instance, **kwargs):
+    rubric = instance.rubric
+    price = instance.price
+    print(f'Объявление в рубрике "{rubric}" с ценой {price:.2f} создано')

@@ -20,6 +20,7 @@ environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -31,6 +32,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,11 +43,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'debug_toolbar',
+    'template_profiler_panel',
     'bootstrap4',
     'captcha',
     'precise_bbcode',
     'django_cleanup',
     'easy_thumbnails',
+    'django_redis',
 
     'bboard.apps.BboardConfig',
     'testapp.apps.TestappConfig',
@@ -54,12 +59,19 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
+    # 'django.middleware.cache.UpdateCacheMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
+
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     # 'bboard.middlewares.my_middleware',
     # 'bboard.middlewares.MyMiddleware',
     # 'bboard.middlewares.RubricsMiddleware',
@@ -100,6 +112,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'firstsite.wsgi.application'
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -146,6 +159,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 DEFAULT_CHARSET = 'utf-8'
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -156,6 +170,7 @@ TIME_ZONE = 'Asia/Almaty'
 USE_I18N = True
 
 USE_TZ = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -176,6 +191,7 @@ LOGOUT_REDIRECT_URL = 'index'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 # Настройки Капчи
 # CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
@@ -223,22 +239,73 @@ THUMBNAIL_DEFAULT_OPTIONS = {
 
 THUMBNAIL_BASEDIR = 'thumbs'
 
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-# EFAULT_FROM_EMAIL = '"webmaster@localhost'
+# DOMAIN_NAME = 'HTTP://127.0.0.1:8000'
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+# DEFAULT_FROM_EMAIL = "webmaster@localhost"
+# EMAIL_HOST = "localhost"
 # EMAIL_PORT = 25
 # EMAIL_HOST_USER = ""
 # EMAIL_HOST_PASSWORD = ""
-EMAIL_FILE_PATH = "tmp/messages"
+# EMAIL_USE_SSL = False
+# EMAIL_USE_TLS = False
+# EMAIL_SSL_CERTFILE = None
+# EMAIL_SSL_KEYFILE = None
+# EMAIL_TIMEOUT = None
+EMAIL_USE_LOCALE = True
+EMAIL_FILE_PATH = "tmp/messages/"
 
+ADMINS = [
+    ('Admin1', 'admin1@supersite.ru'),
+    ('Admin2', 'admin2@supersite.ru'),
+    ('MegaAdmin', 'megaadmin@supersite.ru'),
+]
 
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+#         'LOCATION': 'cache_table',
+#         'TIMEOUT': 120,
+#         'OPTIONS': {
+#             'MAX_ENTRIES': 200,
+#         }
+#     }
+# }
 
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+#         'LOCATION': '127.0.0.1:11211',  # 'LOCATION': 'localhost:11211',
+#     }
+# }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'file_cache'),
+    }
+}
 
-
-
-
-
-
-
+# Настройки для кэширования
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://127.0.0.1:6379/1',  # Адрес и порт вашего Redis-сервера
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         }
+#     }
+# }
+#
+# # Настройки для хранения сессий в Redis
+# SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+# SESSION_CACHE_ALIAS = "default"
+#
+# # Настройки для работы с очередями задач (не обязательно)
+# CELERY_BROKER_URL = 'redis://127.0.0.1:6379/2'  # Адрес и порт вашего Redis-сервера
 

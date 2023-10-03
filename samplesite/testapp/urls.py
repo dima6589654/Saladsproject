@@ -12,5 +12,6 @@ urlpatterns = [
     path('', index, name='index'),
     path('get/<path:filename>/', get, name='get'),
     path('cookie/', test_cookie, name='test_cookie'),
+
     path('mail/', test_mail, name='test_mail'),
 ]

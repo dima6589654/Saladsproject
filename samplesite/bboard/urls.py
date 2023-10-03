@@ -1,23 +1,14 @@
 from django.urls import path, re_path
-
-from bboard.views import (index, by_rubric, BbCreateView,
-                          add_save, add, add_and_save, detail, BbByRubricView,
-                          BbDetailView, BbAddView, rubrics, bbs, search)
-
-from samplesite.bboard.views import BbEditView
-
-vals = {
-    'name': 'by_index',
-    'beaver': 'beaver – это бобёр!'
-}
+from django.views.decorators.cache import cache_page
+from bboard.views import (index, BbCreateView, detail, BbByRubricView,
+                          BbDetailView, rubrics, bbs, search, BbEditView)
 
 urlpatterns = [
     path('', index, name='index'),
     path('rubrics/', rubrics, name='rubrics'),
     path('bbs/<int:rubric_id>/', bbs, name='bbs'),
-
     path('page/<int:page>/', index, name='page'),
-    path('<int:rubric_id>/', BbByRubricView.as_view(), name='by_rubric'),
+    path('<int:rubric_id>/', cache_page(60 * 5)(BbByRubricView.as_view()), name='by_rubric'),
     path('<int:rubric_id>/page/<int:page>/', BbByRubricView.as_view(), name='rubric_page'),
     path('read/<int:rec_id>/', detail, name='read'),
     path('add/', BbCreateView.as_view(), name='add'),

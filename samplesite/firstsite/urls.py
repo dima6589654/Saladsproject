@@ -12,7 +12,6 @@ urlpatterns = [
     path('auth/', include('authapp.urls', namespace='authapp')),
 
     path('accounts/login/', LoginView.as_view(next_page='index'), name='login'),
-    # path('accounts/login/', LoginView.as_view(), name='login'),
     path('accounts/logout/', LogoutView.as_view(), name='logout'),
     path('accounts/password_change/', PasswordChangeView.as_view(
         template_name='registration/change_password.html'),
@@ -28,3 +27,6 @@ urlpatterns += [
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += [path("__debug__/", include("debug_toolbar.urls"))]
