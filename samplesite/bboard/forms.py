@@ -1,9 +1,7 @@
-from captcha.fields import CaptchaField
-from django.core.exceptions import ValidationError
-from django.forms import ModelForm, DecimalField
-from django.forms.widgets import Select
 from django import forms
 from django.core import validators
+from django.core.exceptions import ValidationError
+from django.forms import ModelForm
 
 from bboard.models import Bb, Rubric
 
