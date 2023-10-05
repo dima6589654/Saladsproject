@@ -7,6 +7,23 @@ from django.contrib.auth.models import User
 from bboard.models import Rubric, get_timestamp_path
 
 
+
+
+class Profile(models.Model):
+    phone= models.CharField(max_length=20)
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+
+
+
+
+
+
+
+
+
+
+
+
 class AdvUser(models.Model):
     is_activated = models.BooleanField(
         default=True,

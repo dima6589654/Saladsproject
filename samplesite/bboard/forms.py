@@ -1,11 +1,36 @@
 from captcha.fields import CaptchaField
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm, DecimalField
+from django.forms import ModelForm, modelform_factory, DecimalField
 from django.forms.widgets import Select
 from django import forms
 from django.core import validators
 
 from bboard.models import Bb, Rubric
+
+
+# class BbForm(ModelForm):
+#     class Meta:
+#         model = Bb
+#         fields = ('title', 'content', 'price', 'rubric')
+
+
+# BbForm = modelform_factory(Bb,
+#                            fields=('title', 'content', 'price', 'rubric'),
+#                            labels={'title': 'Название товара'},
+#                            help_texts={'rubric': 'Не забудьте выбрать рубрику!'},
+#                            field_classes={'price': DecimalField},
+#                            widgets={'rubric': Select(attrs={'size': 8})}
+#                            )
+
+
+# class BbForm(ModelForm):
+#     class Meta:
+#         model = Bb
+#         fields = ('title', 'content', 'price', 'rubric')
+#         labels = {'title': 'Название товара'},
+#         help_texts = {'rubric': 'Не забудьте выбрать рубрику!'},
+#         field_classes = {'price': DecimalField},
+#         widgets = {'rubric': Select(attrs={'size': 8})}
 
 
 class BbForm(ModelForm):
@@ -18,13 +43,15 @@ class BbForm(ModelForm):
     price = forms.DecimalField(label='Цена', decimal_places=2)
     rubric = forms.ModelChoiceField(queryset=Rubric.objects.all(),
                                     label='Рубрика', help_text='Не забудьте выбрать рубрику!',
-                                    widget=forms.widgets.Select(attrs={'size': 1,
+                                    widget=forms.widgets.Select(attrs={'size': 5,
                                                                        'class': 'danger'}))
 
-    # captcha = CaptchaField(label='Введите текст с картинки',
-    #                        error_messages={'invalid': 'Неправильный текст'})
+    captcha = CaptchaField(label='Введите текст с картинки',
+                           error_messages={'invalid': 'Неправильный текст'},
+                           # generator='captcha.helpers.math_challenge'
+                           )
 
-    picture = forms.ImageField(label='Выберите файл')
+    picture = forms.ImageField(label='Выберите файл',)
 
     def clean_title(self):
         val = self.cleaned_data['title']
