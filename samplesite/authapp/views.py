@@ -1,51 +1,48 @@
 from django.contrib import auth
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.views.decorators.http import require_http_methods
+from django.urls import reverse
 
 from authapp.forms import UserLoginForm, RegisterUserForm
 
 
-@require_http_methods(["POST"])
 def login(request):
-    title = "Вход"
-    form = UserLoginForm(data=request.POST)
+    title = "вход"
+    login_form = UserLoginForm(data=request.POST)
 
-    if form.is_valid():
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
+    if request.method == 'POST' and login_form.is_valid():
+        username = request.POST['username']
+        password = request.POST['password']
 
         user = auth.authenticate(username=username, password=password)
 
         if user and user.is_active:
             auth.login(request, user)
-            return HttpResponseRedirect(reverse_lazy('index'))
+            return HttpResponseRedirect(reverse('index'))
 
     context = {
         'title': title,
-        'form': form,
+        'login_form': login_form,
     }
 
     return render(request, 'authapp/login.html', context)
 
 
-@require_http_methods(["POST"])
 def register(request):
-    title = "Регистрация"
+    title = "регистрация"
 
     if request.method == 'POST':
-        form = RegisterUserForm(data=request.POST)
+        register_form = RegisterUserForm(data=request.POST)
 
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse_lazy('authapp:login'))
+        if register_form.is_valid():
+            register_form.save()
+            return HttpResponseRedirect(reverse('authapp:login'))
     else:
-        form = RegisterUserForm()
+        register_form = RegisterUserForm()
 
     context = {
         'title': title,
-        'form': form,
+        'register_form': register_form,
     }
 
     return render(request, 'authapp/register.html', context)
@@ -53,4 +50,4 @@ def register(request):
 
 def logout(request):
     auth.logout(request)
-    return HttpResponseRedirect(reverse_lazy('index'))
+    return HttpResponseRedirect(reverse('index'))
