@@ -46,14 +46,14 @@ class BbCreateView(SuccessMessageMixin, UserPassesTestMixin, CreateView):
     template_name = 'bboard/create.html'
     form_class = BbForm
     success_url = reverse_lazy('index')
-
     # success_message = 'Объявление о продаже товара "% (title)s" создано.'
 
     # Начало: Для UserPassesTestMixin
     def test_func(self):
         return self.request.user.is_staff
-
     # Конец: Для UserPassesTestMixin
+
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -232,7 +232,7 @@ def add_save(request):
         bbf.save()
 
         return HttpResponseRedirect(reverse('by_rubric',
-                                            kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk}))
+                    kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk}))
     else:
         context = {'form': bbf}
         return render(request, 'bboard/create.html', context)
@@ -245,7 +245,7 @@ def add_and_save(request):
         if bbf.is_valid():
             bbf.save()
             return HttpResponseRedirect(reverse('by_rubric',
-                                                kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk}))
+                        kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk}))
         else:
             context = {'form': bbf}
             return render(request, 'bboard/create.html', context)
@@ -403,6 +403,7 @@ def api_rubrics(request):
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def api_rubric_detail(request, pk):
     rubric = Rubric.objects.get(pk=pk)
+
     if request.method == 'GET':
         serializer = RubricSerializer(rubric)
         return Response(serializer.data)
