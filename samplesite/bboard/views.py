@@ -16,9 +16,12 @@ from django.views.generic.detail import DetailView
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, FormView, UpdateView, DeleteView
 from precise_bbcode.bbcode import get_parser
-from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework import status, generics
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
 from bboard.forms import BbForm, SearchForm
 from bboard.models import Bb, Rubric
@@ -46,14 +49,14 @@ class BbCreateView(SuccessMessageMixin, UserPassesTestMixin, CreateView):
     template_name = 'bboard/create.html'
     form_class = BbForm
     success_url = reverse_lazy('index')
+
     # success_message = 'Объявление о продаже товара "% (title)s" создано.'
 
     # Начало: Для UserPassesTestMixin
     def test_func(self):
         return self.request.user.is_staff
+
     # Конец: Для UserPassesTestMixin
-
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -232,7 +235,7 @@ def add_save(request):
         bbf.save()
 
         return HttpResponseRedirect(reverse('by_rubric',
-                    kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk}))
+                                            kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk}))
     else:
         context = {'form': bbf}
         return render(request, 'bboard/create.html', context)
@@ -245,7 +248,7 @@ def add_and_save(request):
         if bbf.is_valid():
             bbf.save()
             return HttpResponseRedirect(reverse('by_rubric',
-                        kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk}))
+                                                kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk}))
         else:
             context = {'form': bbf}
             return render(request, 'bboard/create.html', context)
@@ -387,6 +390,7 @@ def search(request):
 
 
 @api_view(['GET', 'POST'])
+# @permission_classes((IsAuthenticated,))
 def api_rubrics(request):
     if request.method == 'GET':
         rubrics = Rubric.objects.all()
@@ -416,3 +420,30 @@ def api_rubric_detail(request, pk):
     elif request.method == 'DELETE':
         rubric.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# class APIRubrics(APIView):
+#     def get(self, request):
+#         rubrics = Rubric.objects.all()
+#         serializer = RubricSerializer(rubrics, many=True)
+#         return Response(serializer.data)
+#
+#     def post(self, request):
+#         serializer = RubricSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# class APIRubrics(generics.ListCreateAPIView):
+#     queryset = Rubric.objects.all()
+#     serializer_class = RubricSerializer
+#
+#
+# class APIRubricDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Rubric.objects.all()
+#     serializer_class = RubricSerializer
+
+class APIRubricViewSet(ModelViewSet):
+    queryset = Rubric.objects.all()
+    serializer_class = RubricSerializer
+    # permission_classes=(IsAuthenticated)
