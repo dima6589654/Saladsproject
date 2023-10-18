@@ -1,8 +1,10 @@
 // const domain = 'http://localhost:8000/';
 const domain = 'http://127.0.0.1:8000/';
-const username='admin';
+
+const username = 'admin';
 const password = '123';
-const credentails=window.btoa(username + ':' + password);
+const credentails = window.btoa(username + ':' + password);
+
 // let list = document.getElementById('list');
 let list = document.querySelector('#list');
 let listLoader = new XMLHttpRequest();
@@ -101,9 +103,8 @@ rubricDeleter.addEventListener('readystatechange', () => {
 
 function listLoad() {
     listLoader.open('GET', domain + 'api/v1/rubrics/', true);
-    listLoader.setRequestHeader('Authorization','Basic' + credentails);
+    listLoader.setRequestHeader('Authorization', 'Basic ' + credentails);
     listLoader.send();
-    
 }
 
 function rubricLoad(evt) {

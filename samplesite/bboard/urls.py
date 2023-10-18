@@ -5,7 +5,8 @@ from rest_framework.routers import DefaultRouter
 from bboard.views import (index, BbCreateView, detail, BbByRubricView,
                           BbDetailView, rubrics, bbs, search, BbEditView,
     # APIRubrics, APIRubricDetail,
-                          APIRubricViewSet)
+                          APIRubricViewSet,
+                          )
 
 router = DefaultRouter()
 router.register('rubrics', APIRubricViewSet)
@@ -17,12 +18,12 @@ urlpatterns = [
     # path('api/v1/rubrics/<int:pk>/', api_rubric_detail),
     # path('api/v1/rubrics/', api_rubrics),
 
-    #
-    #
+    # Start: Lesson_50
     # path('api/v1/rubrics/', APIRubrics.as_view()),
     # path('api/v1/rubrics/<int:pk>/', APIRubricDetail.as_view()),
-
     path('api/v1/', include(router.urls)),
+    # End: Lesson_50
+
     path('bbs/<int:rubric_id>/', bbs, name='bbs'),
     path('page/<int:page>/', index, name='page'),
 
