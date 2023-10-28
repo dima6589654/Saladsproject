@@ -33,6 +33,18 @@
       <option name="myCustomValuesEnabled" value="true" />
     </inspection_tool>
     <inspection_tool class="JSCheckFunctionSignatures" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="4">
+            <item index="0" class="java.lang.String" itemvalue="cffi" />
+            <item index="1" class="java.lang.String" itemvalue="psycopg2" />
+            <item index="2" class="java.lang.String" itemvalue="psycopg2-binary" />
+            <item index="3" class="java.lang.String" itemvalue="debug_toolbar" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
     <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="ignoredErrors">
         <list>
@@ -65,6 +77,16 @@
           <option value="bblist.models.Task.objects" />
           <option value="events.models.Event.objects" />
           <option value="bblist.models.IceCream.objects" />
+          <option value="samplesite.bboard.views.bboard" />
+          <option value="coolsite.women.models.Category.objects" />
+          <option value="coolsite.women.views.WomenHome.get_user_context" />
+          <option value="django.db.models.fields.related.OneToOneField.username" />
+          <option value="bblist.models.UserProfile.objects" />
+          <option value="customuser.models.CustomUserProfile.objects" />
+          <option value="object.get_context_data" />
+          <option value="bblist.mixins.ComplexPropertiesMixin.object" />
+          <option value="bblist.mixins.AccessControlMixin.handle_no_permission" />
+          <option value="object.dispatch" />
         </list>
       </option>
     </inspection_tool>
